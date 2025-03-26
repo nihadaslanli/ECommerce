@@ -78,6 +78,9 @@ namespace ECommerce.UI
                 Password = password,
                 Email = email
             };
+
+            userManager.Add(createUserDto);
+
         }
 
         private static void UpdateUser()

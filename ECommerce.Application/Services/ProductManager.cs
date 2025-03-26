@@ -94,16 +94,19 @@ namespace ECommerce.Application.Services
 
         public void Update(ProductUpdateDto updateDto)
         {
-            var product = new Product
+            var existingProduct = _productrepo.GetById(updateDto.Id);
+
+            if (existingProduct == null)
             {
+                throw new Exception("Product not found.");
+            }
 
-                Id = updateDto.Id,
-                Name = updateDto.Name,
-                Price = updateDto.Price,
-                CategoryId = updateDto.CategoryId
-            };
+            existingProduct.Name = updateDto.Name ?? existingProduct.Name;
+            existingProduct.Price = updateDto.Price;
+            existingProduct.Description = updateDto.Description ?? existingProduct.Description;
+            existingProduct.CategoryId = updateDto.CategoryId;
 
-            _productrepo.Update(product);
+            _productrepo.Update(existingProduct);
 
         }
 

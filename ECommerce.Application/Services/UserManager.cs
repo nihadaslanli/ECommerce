@@ -29,6 +29,7 @@ namespace ECommerce.Application.Services
                 user.Password = createDto.Password;
             }
 
+            _reposiotry.Add(user);
         }
 
         public UserDto Get(Expression<Func<User, bool>> predicate)
@@ -39,8 +40,6 @@ namespace ECommerce.Application.Services
                 UserName = user.UserName,
                 Email = user.Email,
               Password = user.Password
-
-
             };
             return userDto;
 
@@ -57,7 +56,6 @@ namespace ECommerce.Application.Services
                     UserName = item.UserName,
                     Email = item.Email,
                     Password = item.Password,
-                    
                 });
 
             }

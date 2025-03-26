@@ -111,33 +111,55 @@ namespace ECommerce.UI
         private static void UpdateProduct()
         {
             Console.Write("Enter the product ID to update: ");
-            int productId = int.Parse(Console.ReadLine());
+            if (!int.TryParse(Console.ReadLine(), out int productId))
+            {
+                Console.WriteLine("Invalid product ID. Please enter a valid number.");
+                return;
+            }
+
             var existingProduct = productManager.GetById(productId);
             if (existingProduct == null)
             {
-                Console.WriteLine(" Product not found.");
+                Console.WriteLine("Product not found.");
                 Console.WriteLine("Press Enter to continue...");
                 Console.ReadLine();
                 return;
             }
+
             Console.Write($"Enter new name (current: {existingProduct.Name}): ");
             string newName = Console.ReadLine();
-            Console.Write($"Enter new price (current: {existingProduct.Price}): ");
-            decimal newPrice = decimal.Parse(Console.ReadLine());
+            if (string.IsNullOrWhiteSpace(newName)) newName = existingProduct.Name;
 
+            Console.Write($"Enter new description (current: {existingProduct.Description}): ");
+            string newDescription = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(newDescription)) newDescription = existingProduct.Description;
+
+            Console.Write($"Enter new price (current: {existingProduct.Price}): ");
+            if (!decimal.TryParse(Console.ReadLine(), out decimal newPrice))
+            {
+                Console.WriteLine("Invalid price input. Keeping the current price.");
+                newPrice = existingProduct.Price;
+            }
 
             Console.Write("Enter new category ID: ");
-            int newCategoryId = int.Parse(Console.ReadLine());
+            if (!int.TryParse(Console.ReadLine(), out int newCategoryId))
+            {
+                Console.WriteLine("Invalid category ID. Keeping the current category.");
+                newCategoryId = existingProduct.CategoryId;
+            }
 
             var updateProductDto = new ProductUpdateDto
             {
+                Id = productId,
                 Name = newName,
                 Price = newPrice,
-                CategoryId = newCategoryId
+                CategoryId = newCategoryId,
+                Description = newDescription
             };
 
             productManager.Update(updateProductDto);
 
+            Console.WriteLine("Product updated successfully.");
             Console.WriteLine("Press Enter to continue...");
             Console.ReadLine();
 
