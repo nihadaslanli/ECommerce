@@ -22,14 +22,21 @@ namespace ECommerce.Application.Services
 
         public void Add(UserCreateDto createDto)
         {
-            var user = new User();
+            var existingUser =_reposiotry.Get(u=>u.UserName== createDto.UserName);
+            if (existingUser != null)
             {
-                user.UserName = createDto.UserName;
-                user.Email = createDto.Email;
-                user.Password = createDto.Password;
+                Console.WriteLine("Warning : A product with the same name  already exists! User not added!");
+                return;
             }
+            User user = new User
+            {
+                UserName = createDto.UserName,
+                Email = createDto.Email,
+                Password = createDto.Password
+            };
 
             _reposiotry.Add(user);
+            Console.WriteLine("User added successfully!");
         }
 
         public UserDto Get(Expression<Func<User, bool>> predicate)
@@ -37,6 +44,7 @@ namespace ECommerce.Application.Services
             var user = _reposiotry.Get(predicate);
             var userDto = new UserDto
             {
+                Id = user.Id,
                 UserName = user.UserName,
                 Email = user.Email,
               Password = user.Password
@@ -53,6 +61,7 @@ namespace ECommerce.Application.Services
             {
                 userDtoList.Add(new UserDto
                 {
+                    Id = item.Id,
                     UserName = item.UserName,
                     Email = item.Email,
                     Password = item.Password,
@@ -67,7 +76,8 @@ namespace ECommerce.Application.Services
         {
             var user = _reposiotry.GetById(id);
             var userDto = new UserDto
-            {
+            {   
+                Id = user.Id,
                 UserName = user.UserName,
                 Email = user.Email,
                 Password = user.Password
@@ -87,15 +97,18 @@ namespace ECommerce.Application.Services
 
         public void Update(UserUpdateDto updateDto)
         {
-            var user = new User
+            var existingUser=_reposiotry.GetById(updateDto.Id);
+            if (existingUser == null)
             {
-                UserName = updateDto.UserName,
-                Id = updateDto.Id,
-                Password = updateDto.Password,
-                Email = updateDto.Email
+                throw new Exception("User not found.");
+            }
+            existingUser.UserName = updateDto.UserName;
+            existingUser.Email = updateDto.Email;
+            existingUser.Password = updateDto.Password;
 
-            };
-            _reposiotry.Update(user);
+            _reposiotry.Update(existingUser);
+            Console.WriteLine("User updated successfully.");
+
         }
     }
 }

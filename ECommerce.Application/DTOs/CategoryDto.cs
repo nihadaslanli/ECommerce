@@ -3,11 +3,12 @@
 public class CategoryDto
 {
     public int Id { get; set; }
-    public string? Name { get; set; }
+    public string Name { get; set; }
 }
 
 public class CategoryCreateDto
 {
+    public int Id { get; set; }
     public required string Name { get; set; }
 }
 

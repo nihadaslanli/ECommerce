@@ -24,6 +24,13 @@ namespace ECommerce.Application.Services
 
         public void Add(ProductCreateDto createDto)
         {
+            var existingProduct = _productrepo.Get(p => p.Name == createDto.Name);
+            if (existingProduct != null)
+            {
+                Console.WriteLine(" Warning: A product with the same name already exists! Product not added.");
+                return; 
+            }
+
             Product product = new Product
             {
                 Name = createDto.Name,
@@ -31,7 +38,9 @@ namespace ECommerce.Application.Services
                 CategoryId = createDto.CategoryId,
                 Description = createDto.Description,
             };
-            _productrepo.Add(product);
+
+            _productrepo.Add(product);  
+            Console.WriteLine(" Product added successfully!");
         }
 
         public ProductDto Get(Expression<Func<Product, bool>> predicate)
@@ -107,7 +116,7 @@ namespace ECommerce.Application.Services
             existingProduct.CategoryId = updateDto.CategoryId;
 
             _productrepo.Update(existingProduct);
-
+        
         }
 
         public void AddToBasket(int productId)
@@ -144,6 +153,37 @@ namespace ECommerce.Application.Services
             foreach (var item in _basket)
             {
                 Console.WriteLine($"- {item.Name} | {item.Price}$");
+            }
+        }
+        public void PurchaseBasket()
+        {
+            if (_basket.Count == 0)
+            {
+                Console.WriteLine("❌ Your basket is empty. Please add items to your basket before proceeding.");
+                return;
+            }
+
+            decimal totalAmount = 0;
+            foreach (var item in _basket)
+            {
+                totalAmount += item.Price;
+            }
+
+            Console.WriteLine($"Your total basket amount is: {totalAmount}$");
+            Console.Write("Do you want to proceed with the purchase? (Yes/No): ");
+            string confirmation = Console.ReadLine()?.ToLower();
+
+            if (confirmation == "yes")
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Your purchase has been successfully completed!");
+
+
+                _basket.Clear();
+            }
+            else
+            {
+                Console.WriteLine("Purchase cancelled.");
             }
         }
     }

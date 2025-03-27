@@ -18,9 +18,20 @@ public class CategoryManager : ICategoryService
 
     public void Add(CategoryCreateDto createDto)
     {
-        var category = createDto.ToCategory();
+        var existingCategory = _repository.Get(c=>c.Name ==createDto.Name);
+        if (existingCategory != null)
+        {
+            Console.WriteLine("Warning : A product with the same name already exists!");
+            return;
+        }
+        Category category = new Category
+        {
+            Name = createDto.Name,
 
+        };
+     
         _repository.Add(category);
+        Console.WriteLine(" Category added seccessfully");
     }
 
     public CategoryDto Get(Expression<Func<Category, bool>> predicate)
@@ -44,6 +55,7 @@ public class CategoryManager : ICategoryService
             {
                 Id = item.Id,
                 Name = item.Name
+                
             });
         }
 
@@ -74,12 +86,14 @@ public class CategoryManager : ICategoryService
 
     public void Update(CategoryUpdateDto updateDto)
     {
-        var category = new Category
+        var existingCategory = _repository.GetById(updateDto.Id);
+        if(existingCategory == null)
         {
-            Id = updateDto.Id,
-            Name = updateDto.Name
-        };
-
-        _repository.Update(category);
+            throw new Exception("Category not found.");
+        }
+        existingCategory.Name = updateDto.Name;
+        
+        _repository.Update(existingCategory);
+        Console.WriteLine("Category UPDATED successful ");
     }
 }

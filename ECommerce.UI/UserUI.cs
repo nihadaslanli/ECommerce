@@ -24,12 +24,8 @@ namespace ECommerce.UI
             {
                 Console.Clear();
                 Console.WriteLine("==== User  Menu ====");
-                Console.WriteLine("1. Add User");
-                Console.WriteLine("2. Update User");
-                Console.WriteLine("3. Delete User");
-                Console.WriteLine("4. List All Users");
-                Console.WriteLine("5. List By Id User");
-                Console.WriteLine("6. Back to Main Menu");
+                Console.WriteLine("1. Change rol User");
+                Console.WriteLine("2. Back to Main Menu");
                 Console.Write("Select an option: ");
 
                 string choice = Console.ReadLine();
@@ -39,14 +35,6 @@ namespace ECommerce.UI
                     case "1":
                         AddUser(); break;
                     case "2":
-                        UpdateUser(); break;
-                    case "3":
-                        RemoveUser(); break;
-                    case "4":
-                        GetAll(); break;
-                    case "5":
-                        GetById(); break;
-                    case "6":
                         return;
                     default:
                         Console.WriteLine("Invalid choice."); break;

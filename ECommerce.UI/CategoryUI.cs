@@ -70,6 +70,8 @@ namespace ECommerce.UI
                 Name = name,
 
             };
+            categoryManager.Add(createCategoryDto);
+
             Console.WriteLine("Press Enter to continue...");
             Console.ReadLine();
 
@@ -82,7 +84,7 @@ namespace ECommerce.UI
             var existingCategory = categoryManager.GetById(categoryId);
             if (existingCategory == null)
             {
-                Console.WriteLine("❌ Category not found.");
+                Console.WriteLine(" Category not found.");
                 Console.WriteLine("Press Enter to continue...");
                 Console.ReadLine();
                 return;
@@ -113,7 +115,7 @@ namespace ECommerce.UI
 
         private static void GetAll()
         {
-            var categoryDtoList = categoryManager.GetAll(null, true);
+            var categoryDtoList = categoryManager.GetAll(null, false);
             if (categoryDtoList.Count == 0)
             {
                 Console.WriteLine(" No categories found.");
